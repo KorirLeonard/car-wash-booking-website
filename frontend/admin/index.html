@@ -47,14 +47,17 @@
           const errEl = document.getElementById("login-err");
           errEl.innerText = "";
           try {
-            const res = await fetch("http://localhost:5000/api/auth/login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                username: document.getElementById("username").value,
-                password: document.getElementById("password").value,
-              }),
-            });
+            const res = await fetch(
+              "https://car-wash-booking-website.onrender.com/api/auth/login",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  username: document.getElementById("username").value,
+                  password: document.getElementById("password").value,
+                }),
+              },
+            );
             const data = await res.json();
             if (res.ok) {
               localStorage.setItem("adminToken", data.token);
