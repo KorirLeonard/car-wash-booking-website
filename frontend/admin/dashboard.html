@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
     <style>
       :root {
         --db-bg: #05070d;
@@ -125,6 +125,150 @@
         border-color: var(--db-accent);
         color: var(--db-text);
         background: rgba(79, 124, 255, 0.06);
+      }
+
+      .db-bell-btn {
+        position: relative;
+        background: transparent;
+        border: 1px solid var(--db-border);
+        color: var(--db-text-dim);
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+      .db-bell-btn:hover {
+        border-color: var(--db-accent);
+        color: var(--db-text);
+        background: rgba(79, 124, 255, 0.06);
+      }
+      .db-bell-btn.ringing svg {
+        animation: bell-ring 0.6s ease-in-out 2;
+      }
+      @keyframes bell-ring {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        20% {
+          transform: rotate(14deg);
+        }
+        40% {
+          transform: rotate(-12deg);
+        }
+        60% {
+          transform: rotate(8deg);
+        }
+        80% {
+          transform: rotate(-6deg);
+        }
+      }
+      .bell-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--db-danger);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 800;
+        min-width: 17px;
+        height: 17px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        border: 2px solid var(--db-bg);
+      }
+
+      /* Toast notifications */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 200;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+      }
+      .toast {
+        min-width: 280px;
+        max-width: 360px;
+        background: var(--db-surface-alt);
+        border: 1px solid var(--db-border);
+        border-left: 4px solid var(--db-success);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        pointer-events: auto;
+        animation: toast-in 0.25s ease forwards;
+      }
+      .toast.error {
+        border-left-color: var(--db-danger);
+      }
+      .toast.info {
+        border-left-color: var(--db-accent);
+      }
+      .toast.leaving {
+        animation: toast-out 0.25s ease forwards;
+      }
+      .toast .toast-icon {
+        font-size: 1.1rem;
+        line-height: 1;
+        margin-top: 1px;
+      }
+      .toast .toast-body {
+        flex: 1;
+      }
+      .toast .toast-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin: 0 0 2px;
+      }
+      .toast .toast-msg {
+        font-size: 0.78rem;
+        color: var(--db-text-dim);
+        margin: 0;
+      }
+      .toast .toast-close {
+        background: none;
+        border: none;
+        color: var(--db-text-dim);
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0;
+        line-height: 1;
+      }
+      .toast .toast-close:hover {
+        color: var(--db-text);
+      }
+      @keyframes toast-in {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes toast-out {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(30px);
+        }
       }
 
       /* Main layout */
@@ -603,6 +747,29 @@
         ><span class="dot"></span>Control<span>Dashboard</span></a
       >
       <div style="display: flex; align-items: center; gap: 10px">
+        <button
+          class="db-bell-btn"
+          id="bell-btn"
+          onclick="clearNotifications()"
+          title="New booking alerts"
+        >
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span id="bell-badge" class="bell-badge" style="display: none"
+            >0</span
+          >
+        </button>
         <a href="../index.html" class="db-home-btn">
           <svg
             width="15"
@@ -811,6 +978,8 @@
       </div>
     </div>
 
+    <div id="toast-container" class="toast-container"></div>
+
     <script>
       const token = localStorage.getItem("adminToken");
       if (!token) window.location.href = "index.html";
@@ -827,8 +996,17 @@
 
       let revenueChart, statusChart;
       let allBookings = [];
+      let knownBookingIds = null;
+      let unseenCount = 0;
+      const originalTitle = document.title;
 
-      document.addEventListener("DOMContentLoaded", loadDashboardData);
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDashboardData();
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
+        setInterval(checkForNewBookings, 30000);
+      });
 
       async function loadDashboardData() {
         try {
@@ -839,12 +1017,97 @@
 
           const bookings = await res.json();
           allBookings = bookings;
+
+          if (knownBookingIds === null) {
+            // First load — just record what exists, don't notify
+            knownBookingIds = new Set(bookings.map((b) => b.id));
+          }
+
           renderMetrics(bookings);
           renderTable(bookings);
           renderCharts(bookings);
         } catch (e) {
           console.error(e);
         }
+      }
+
+      async function checkForNewBookings() {
+        try {
+          const res = await fetch(`${API_BASE}/bookings/admin/all`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!res.ok) return;
+          const bookings = await res.json();
+
+          const newOnes = bookings.filter((b) => !knownBookingIds.has(b.id));
+          if (newOnes.length > 0) {
+            newOnes.forEach((b) => knownBookingIds.add(b.id));
+            unseenCount += newOnes.length;
+            updateBellBadge();
+            flashTabTitle();
+            fireBrowserNotification(newOnes);
+            const first = newOnes[0];
+            showToast(
+              "New Booking Request",
+              newOnes.length === 1
+                ? `${first.customer_name} booked ${first.service_name}`
+                : `${newOnes.length} new bookings just came in`,
+              "info",
+            );
+          }
+
+          allBookings = bookings;
+          renderMetrics(bookings);
+          if (
+            document.getElementById("view-bookings").style.display !== "none"
+          ) {
+            applyFilters();
+          }
+          renderCharts(bookings);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function updateBellBadge() {
+        const badge = document.getElementById("bell-badge");
+        const bell = document.getElementById("bell-btn");
+        if (unseenCount > 0) {
+          badge.style.display = "flex";
+          badge.innerText = unseenCount > 9 ? "9+" : unseenCount;
+          bell.classList.add("ringing");
+          setTimeout(() => bell.classList.remove("ringing"), 1300);
+        } else {
+          badge.style.display = "none";
+        }
+      }
+
+      function clearNotifications() {
+        unseenCount = 0;
+        updateBellBadge();
+        document.title = originalTitle;
+      }
+
+      function flashTabTitle() {
+        document.title = `(${unseenCount}) New Booking! — ${originalTitle}`;
+      }
+
+      function fireBrowserNotification(newOnes) {
+        if (
+          !("Notification" in window) ||
+          Notification.permission !== "granted"
+        )
+          return;
+        const first = newOnes[0];
+        const body =
+          newOnes.length === 1
+            ? `${first.customer_name} booked ${first.service_name}`
+            : `${newOnes.length} new bookings just came in`;
+        const notif = new Notification("New Booking Request", { body });
+        notif.onclick = () => {
+          window.focus();
+          clearNotifications();
+        };
       }
 
       function applyFilters() {
@@ -1109,6 +1372,28 @@
         }
       }
 
+      function showToast(title, message, type = "success", duration = 4500) {
+        const container = document.getElementById("toast-container");
+        const icons = { success: "✅", error: "⚠️", info: "ℹ️" };
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+          <div class="toast-icon">${icons[type] || icons.info}</div>
+          <div class="toast-body">
+            <p class="toast-title">${title}</p>
+            <p class="toast-msg">${message}</p>
+          </div>
+          <button class="toast-close" onclick="this.closest('.toast').remove()">✕</button>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+          toast.classList.add("leaving");
+          setTimeout(() => toast.remove(), 250);
+        }, duration);
+      }
+
       async function updateStatus(bookingId, nextStatus) {
         try {
           const res = await fetch(`${API_BASE}/bookings/status`, {
@@ -1120,9 +1405,28 @@
             body: JSON.stringify({ bookingId, status: nextStatus }),
           });
           if (!res.ok) throw new Error("Update failed");
+
+          if (nextStatus === "Confirmed") {
+            showToast(
+              "Booking Confirmed",
+              `#${bookingId} approved — confirmation email sent to customer.`,
+              "success",
+            );
+          } else {
+            showToast(
+              "Status Updated",
+              `Booking #${bookingId} is now "${nextStatus}".`,
+              "info",
+            );
+          }
+
           loadDashboardData();
         } catch (e) {
-          alert("Status synchronization failed");
+          showToast(
+            "Update Failed",
+            "Could not sync status. Please try again.",
+            "error",
+          );
         }
       }
 
@@ -1134,9 +1438,14 @@
             headers: { Authorization: `Bearer ${token}` },
           });
           if (!res.ok) throw new Error("Delete failed");
+          showToast(
+            "Booking Deleted",
+            `#${id} was removed from the queue.`,
+            "info",
+          );
           loadDashboardData();
         } catch (e) {
-          alert("Failed to delete booking.");
+          showToast("Delete Failed", "Could not delete this booking.", "error");
         }
       }
 
@@ -1275,9 +1584,14 @@
           }
           if (!res.ok) throw new Error("Save failed");
           closeServiceModal();
+          showToast(
+            id ? "Service Updated" : "Service Added",
+            `"${name}" saved successfully.`,
+            "success",
+          );
           loadServices();
         } catch (e) {
-          alert("Failed to save service.");
+          showToast("Save Failed", "Could not save this service.", "error");
         }
       }
 
@@ -1295,12 +1609,17 @@
           });
           const data = await res.json();
           if (!res.ok) {
-            alert(data.error || "Failed to delete service.");
+            showToast(
+              "Delete Failed",
+              data.error || "Could not delete this service.",
+              "error",
+            );
             return;
           }
+          showToast("Service Deleted", "The service was removed.", "info");
           loadServices();
         } catch (e) {
-          alert("Failed to delete service.");
+          showToast("Delete Failed", "Could not delete this service.", "error");
         }
       }
 
