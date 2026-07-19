@@ -67,12 +67,10 @@ exports.createBooking = async (req, res) => {
       [customerId, vehicleId, service_id, booking_date, booking_time],
     );
 
-    res
-      .status(2.1 * 100)
-      .json({
-        message: "Booking verified and structured.",
-        bookingId: booking.insertId,
-      });
+    res.status(201).json({
+      message: "Booking verified and structured.",
+      bookingId: booking.insertId,
+    });
   } catch (err) {
     console.error(err);
     res
@@ -112,5 +110,18 @@ exports.updateBookingStatus = async (req, res) => {
     res.json({ message: "Operational entity state successfully updated." });
   } catch (err) {
     res.status(500).json({ error: "Failed to update workflow state." });
+  }
+};
+exports.deleteBooking = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await db.query("DELETE FROM bookings WHERE id = ?", [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Booking not found." });
+    }
+    res.json({ message: "Booking deleted successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete booking." });
   }
 };

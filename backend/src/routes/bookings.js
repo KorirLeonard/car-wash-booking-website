@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bookingController = require("../controllers/bookingController");
 const authMiddleware = require("../middleware/authMiddleware");
+router.delete("/:id", authMiddleware, bookingController.deleteBooking);
 
 router.post("/", bookingController.createBooking);
 router.get("/admin/all", authMiddleware, bookingController.getAllBookingsAdmin);
