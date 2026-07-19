@@ -261,7 +261,57 @@
       .table-section .sub {
         color: var(--db-text-dim);
         font-size: 0.82rem;
-        margin: 0 0 18px;
+        margin: 0;
+      }
+      .table-header-row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+      .table-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      #search-input,
+      #status-filter {
+        background: var(--db-surface);
+        border: 1px solid var(--db-border);
+        color: var(--db-text);
+        padding: 9px 14px;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      #search-input {
+        min-width: 220px;
+      }
+      #search-input:focus,
+      #status-filter:focus {
+        outline: none;
+        border-color: var(--db-accent);
+      }
+      .export-btn {
+        background: linear-gradient(
+          135deg,
+          var(--db-accent),
+          var(--db-accent-2)
+        );
+        color: white;
+        border: none;
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.15s ease;
+      }
+      .export-btn:hover {
+        opacity: 0.85;
       }
       .table-card {
         background: var(--db-surface);
@@ -366,6 +416,163 @@
         background: var(--db-border);
         border-radius: 4px;
       }
+
+      /* Tabs */
+      .db-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--db-border);
+      }
+      .tab-btn {
+        background: transparent;
+        border: none;
+        color: var(--db-text-dim);
+        padding: 10px 4px;
+        margin-right: 20px;
+        font-family: inherit;
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: color 0.15s ease;
+      }
+      .tab-btn.active {
+        color: var(--db-text);
+        border-bottom-color: var(--db-accent);
+      }
+      .tab-btn:hover {
+        color: var(--db-text);
+      }
+
+      /* Delete / action buttons */
+      .icon-btn {
+        background: rgba(245, 85, 108, 0.1);
+        border: 1px solid rgba(245, 85, 108, 0.2);
+        color: var(--db-danger);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+      .icon-btn:hover {
+        background: rgba(245, 85, 108, 0.2);
+      }
+      .icon-btn.edit {
+        background: rgba(79, 124, 255, 0.1);
+        border-color: rgba(79, 124, 255, 0.2);
+        color: var(--db-accent);
+        margin-right: 6px;
+      }
+      .icon-btn.edit:hover {
+        background: rgba(79, 124, 255, 0.2);
+      }
+
+      .badge {
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+      .badge.on {
+        background: rgba(47, 212, 143, 0.14);
+        color: var(--db-success);
+      }
+      .badge.off {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--db-text-dim);
+      }
+
+      /* Modal */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(3, 5, 10, 0.7);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 20px;
+      }
+      .modal-card {
+        background: var(--db-surface-alt);
+        border: 1px solid var(--db-border);
+        border-radius: 18px;
+        padding: 28px;
+        width: 100%;
+        max-width: 420px;
+      }
+      .modal-card h3 {
+        margin: 0 0 20px;
+        font-size: 1.1rem;
+      }
+      .modal-card label {
+        display: block;
+        font-size: 0.78rem;
+        color: var(--db-text-dim);
+        margin: 14px 0 6px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .modal-card input[type="text"],
+      .modal-card input[type="number"],
+      .modal-card textarea {
+        width: 100%;
+        background: var(--db-bg);
+        border: 1px solid var(--db-border);
+        color: var(--db-text);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        resize: vertical;
+      }
+      .modal-card input:focus,
+      .modal-card textarea:focus {
+        outline: none;
+        border-color: var(--db-accent);
+      }
+      .checkbox-row {
+        display: flex !important;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px !important;
+        text-transform: none !important;
+        font-size: 0.85rem !important;
+        color: var(--db-text) !important;
+        cursor: pointer;
+      }
+      .checkbox-row input {
+        width: auto;
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 22px;
+      }
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--db-border);
+        color: var(--db-text-dim);
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn-secondary:hover {
+        color: var(--db-text);
+        border-color: var(--db-text-dim);
+      }
     </style>
   </head>
   <body>
@@ -384,67 +591,185 @@
         <p>Live snapshot of bookings, revenue, and service demand.</p>
       </div>
 
-      <div class="metrics-bar">
-        <div class="metric-card">
-          <div class="icon icon-blue">📋</div>
-          <h4>Live Bookings Active</h4>
-          <p id="count-bookings">0</p>
+      <div class="db-tabs">
+        <button
+          class="tab-btn active"
+          id="tab-btn-bookings"
+          onclick="switchTab('bookings')"
+        >
+          Bookings
+        </button>
+        <button
+          class="tab-btn"
+          id="tab-btn-services"
+          onclick="switchTab('services')"
+        >
+          Services
+        </button>
+      </div>
+
+      <div id="view-bookings">
+        <div class="metrics-bar">
+          <div class="metric-card">
+            <div class="icon icon-blue">📋</div>
+            <h4>Live Bookings Active</h4>
+            <p id="count-bookings">0</p>
+          </div>
+          <div class="metric-card">
+            <div class="icon icon-green">💵</div>
+            <h4>Total Value Managed</h4>
+            <p id="total-revenue">$0.00</p>
+          </div>
+          <div class="metric-card">
+            <div class="icon icon-amber">⏳</div>
+            <h4>Pending Review</h4>
+            <p id="count-pending">0</p>
+          </div>
+          <div class="metric-card">
+            <div class="icon icon-purple">✅</div>
+            <h4>Completed</h4>
+            <p id="count-completed">0</p>
+          </div>
         </div>
-        <div class="metric-card">
-          <div class="icon icon-green">💵</div>
-          <h4>Total Value Managed</h4>
-          <p id="total-revenue">$0.00</p>
+
+        <div class="charts-row">
+          <div class="chart-card">
+            <h3>Revenue by Service</h3>
+            <p class="sub">Total booked value per service package</p>
+            <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Booking Status Breakdown</h3>
+            <p class="sub">Current distribution across the queue</p>
+            <div class="chart-wrap donut">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
         </div>
-        <div class="metric-card">
-          <div class="icon icon-amber">⏳</div>
-          <h4>Pending Review</h4>
-          <p id="count-pending">0</p>
-        </div>
-        <div class="metric-card">
-          <div class="icon icon-purple">✅</div>
-          <h4>Completed</h4>
-          <p id="count-completed">0</p>
+
+        <div class="table-section">
+          <div class="table-header-row">
+            <div>
+              <h3>Active Queue Management Log</h3>
+              <p class="sub">All bookings, sorted by most recent</p>
+            </div>
+            <div class="table-controls">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search name, email, plate..."
+                oninput="applyFilters()"
+              />
+              <select id="status-filter" onchange="applyFilters()">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <button class="export-btn" onclick="exportCSV()">
+                ⬇ Export CSV
+              </button>
+            </div>
+          </div>
+          <div class="table-card">
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Contact</th>
+                    <th>Vehicle</th>
+                    <th>Service</th>
+                    <th>Schedule</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="bookings-table-body">
+                  <!-- Hydrated Dynamically via Secure Bearer Headers -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="charts-row">
-        <div class="chart-card">
-          <h3>Revenue by Service</h3>
-          <p class="sub">Total booked value per service package</p>
-          <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <h3>Booking Status Breakdown</h3>
-          <p class="sub">Current distribution across the queue</p>
-          <div class="chart-wrap donut"><canvas id="statusChart"></canvas></div>
-        </div>
-      </div>
-
-      <div class="table-section">
-        <h3>Active Queue Management Log</h3>
-        <p class="sub">All bookings, sorted by most recent</p>
-        <div class="table-card">
-          <div style="overflow-x: auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Client</th>
-                  <th>Contact</th>
-                  <th>Vehicle</th>
-                  <th>Service</th>
-                  <th>Schedule</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="bookings-table-body">
-                <!-- Hydrated Dynamically via Secure Bearer Headers -->
-              </tbody>
-            </table>
+      <div id="view-services" style="display: none">
+        <div class="table-section">
+          <div class="table-header-row">
+            <div>
+              <h3>Service Packages</h3>
+              <p class="sub">Manage what customers can book</p>
+            </div>
+            <div class="table-controls">
+              <button class="export-btn" onclick="openServiceModal()">
+                + Add Service
+              </button>
+            </div>
+          </div>
+          <div class="table-card">
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Active</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="services-table-body">
+                  <!-- Hydrated Dynamically -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </main>
+
+    <div
+      id="service-modal-backdrop"
+      class="modal-backdrop"
+      style="display: none"
+    >
+      <div class="modal-card">
+        <h3 id="service-modal-title">Add Service</h3>
+        <input type="hidden" id="service-id" />
+        <label>Name</label>
+        <input type="text" id="service-name" placeholder="e.g. Exterior Wash" />
+        <label>Description</label>
+        <textarea
+          id="service-description"
+          rows="3"
+          placeholder="Short description shown to customers"
+        ></textarea>
+        <label>Price ($)</label>
+        <input
+          type="number"
+          id="service-price"
+          placeholder="e.g. 25"
+          step="0.01"
+        />
+        <label class="checkbox-row">
+          <input type="checkbox" id="service-active" checked />
+          Active (visible to customers)
+        </label>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeServiceModal()">
+            Cancel
+          </button>
+          <button class="export-btn" onclick="saveService()">
+            Save Service
+          </button>
+        </div>
+      </div>
+    </div>
 
     <script>
       const token = localStorage.getItem("adminToken");
@@ -461,6 +786,7 @@
       };
 
       let revenueChart, statusChart;
+      let allBookings = [];
 
       document.addEventListener("DOMContentLoaded", loadDashboardData);
 
@@ -472,12 +798,102 @@
           if (res.status === 401 || res.status === 403) return logout();
 
           const bookings = await res.json();
+          allBookings = bookings;
           renderMetrics(bookings);
           renderTable(bookings);
           renderCharts(bookings);
         } catch (e) {
           console.error(e);
         }
+      }
+
+      function applyFilters() {
+        const query = document
+          .getElementById("search-input")
+          .value.trim()
+          .toLowerCase();
+        const statusVal = document.getElementById("status-filter").value;
+
+        const filtered = allBookings.filter((b) => {
+          const matchesQuery =
+            !query ||
+            (b.customer_name || "").toLowerCase().includes(query) ||
+            (b.customer_email || "").toLowerCase().includes(query) ||
+            (b.registration_number || "").toLowerCase().includes(query) ||
+            (b.customer_phone || "").toLowerCase().includes(query);
+          const matchesStatus = !statusVal || b.status === statusVal;
+          return matchesQuery && matchesStatus;
+        });
+
+        renderTable(filtered);
+      }
+
+      function exportCSV() {
+        const query = document
+          .getElementById("search-input")
+          .value.trim()
+          .toLowerCase();
+        const statusVal = document.getElementById("status-filter").value;
+        const rows = allBookings.filter((b) => {
+          const matchesQuery =
+            !query ||
+            (b.customer_name || "").toLowerCase().includes(query) ||
+            (b.customer_email || "").toLowerCase().includes(query) ||
+            (b.registration_number || "").toLowerCase().includes(query);
+          const matchesStatus = !statusVal || b.status === statusVal;
+          return matchesQuery && matchesStatus;
+        });
+
+        if (rows.length === 0) {
+          alert("No bookings to export.");
+          return;
+        }
+
+        const headers = [
+          "ID",
+          "Customer Name",
+          "Email",
+          "Phone",
+          "Vehicle Type",
+          "Registration",
+          "Service",
+          "Price",
+          "Date",
+          "Time",
+          "Status",
+        ];
+        const csvRows = [headers.join(",")];
+
+        rows.forEach((b) => {
+          const dateFormatted = new Date(b.booking_date).toLocaleDateString();
+          const line = [
+            b.id,
+            `"${(b.customer_name || "").replace(/"/g, '""')}"`,
+            b.customer_email,
+            b.customer_phone,
+            b.vehicle_type,
+            b.registration_number,
+            `"${(b.service_name || "").replace(/"/g, '""')}"`,
+            b.price,
+            dateFormatted,
+            b.booking_time,
+            b.status,
+          ].join(",");
+          csvRows.push(line);
+        });
+
+        const csvContent = csvRows.join("\n");
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `bookings_export_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }
 
       function renderMetrics(bookings) {
@@ -505,7 +921,7 @@
         if (bookings.length === 0) {
           tbody.innerHTML = `
             <tr>
-              <td colspan="7">
+              <td colspan="8">
                 <div class="empty-state">
                   <div class="big">📭</div>
                   No bookings yet — new reservations will appear here automatically.
@@ -540,6 +956,9 @@
                   <option value="Completed" ${b.status === "Completed" ? "selected" : ""}>Completed</option>
                   <option value="Cancelled" ${b.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
                 </select>
+              </td>
+              <td>
+                <button class="icon-btn" title="Delete booking" onclick="deleteBooking(${b.id})">🗑</button>
               </td>
             </tr>`;
         });
@@ -664,6 +1083,184 @@
           loadDashboardData();
         } catch (e) {
           alert("Status synchronization failed");
+        }
+      }
+
+      async function deleteBooking(id) {
+        if (!confirm(`Delete booking #${id}? This cannot be undone.`)) return;
+        try {
+          const res = await fetch(`${API_BASE}/bookings/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!res.ok) throw new Error("Delete failed");
+          loadDashboardData();
+        } catch (e) {
+          alert("Failed to delete booking.");
+        }
+      }
+
+      /* ---------- Tabs ---------- */
+      function switchTab(tab) {
+        const isBookings = tab === "bookings";
+        document.getElementById("view-bookings").style.display = isBookings
+          ? "block"
+          : "none";
+        document.getElementById("view-services").style.display = isBookings
+          ? "none"
+          : "block";
+        document
+          .getElementById("tab-btn-bookings")
+          .classList.toggle("active", isBookings);
+        document
+          .getElementById("tab-btn-services")
+          .classList.toggle("active", !isBookings);
+        if (!isBookings) loadServices();
+      }
+
+      /* ---------- Services CRUD ---------- */
+      let allServices = [];
+
+      async function loadServices() {
+        try {
+          const res = await fetch(`${API_BASE}/services/admin/all`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.status === 401 || res.status === 403) return logout();
+          allServices = await res.json();
+          renderServicesTable(allServices);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      function renderServicesTable(services) {
+        const tbody = document.getElementById("services-table-body");
+        tbody.innerHTML = "";
+
+        if (services.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6">
+                <div class="empty-state">
+                  <div class="big">🧴</div>
+                  No services yet — add your first package to get started.
+                </div>
+              </td>
+            </tr>`;
+          return;
+        }
+
+        services.forEach((s) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>#${s.id}</td>
+              <td class="customer-name">${s.name}</td>
+              <td>${s.description || ""}</td>
+              <td>$${parseFloat(s.price).toFixed(2)}</td>
+              <td>
+                <span class="badge ${s.is_active ? "on" : "off"}">${s.is_active ? "Active" : "Inactive"}</span>
+              </td>
+              <td>
+                <button class="icon-btn edit" title="Edit" onclick='openServiceModal(${JSON.stringify(s)})'>✎</button>
+                <button class="icon-btn" title="Delete" onclick="deleteService(${s.id})">🗑</button>
+              </td>
+            </tr>`;
+        });
+      }
+
+      function openServiceModal(service) {
+        document.getElementById("service-modal-backdrop").style.display =
+          "flex";
+        if (service) {
+          document.getElementById("service-modal-title").innerText =
+            "Edit Service";
+          document.getElementById("service-id").value = service.id;
+          document.getElementById("service-name").value = service.name;
+          document.getElementById("service-description").value =
+            service.description || "";
+          document.getElementById("service-price").value = service.price;
+          document.getElementById("service-active").checked =
+            !!service.is_active;
+        } else {
+          document.getElementById("service-modal-title").innerText =
+            "Add Service";
+          document.getElementById("service-id").value = "";
+          document.getElementById("service-name").value = "";
+          document.getElementById("service-description").value = "";
+          document.getElementById("service-price").value = "";
+          document.getElementById("service-active").checked = true;
+        }
+      }
+
+      function closeServiceModal() {
+        document.getElementById("service-modal-backdrop").style.display =
+          "none";
+      }
+
+      async function saveService() {
+        const id = document.getElementById("service-id").value;
+        const name = document.getElementById("service-name").value.trim();
+        const description = document
+          .getElementById("service-description")
+          .value.trim();
+        const price = document.getElementById("service-price").value;
+        const is_active = document.getElementById("service-active").checked;
+
+        if (!name || !price) {
+          alert("Name and price are required.");
+          return;
+        }
+
+        try {
+          let res;
+          if (id) {
+            res = await fetch(`${API_BASE}/services/${id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ name, description, price, is_active }),
+            });
+          } else {
+            res = await fetch(`${API_BASE}/services`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ name, description, price }),
+            });
+          }
+          if (!res.ok) throw new Error("Save failed");
+          closeServiceModal();
+          loadServices();
+        } catch (e) {
+          alert("Failed to save service.");
+        }
+      }
+
+      async function deleteService(id) {
+        if (
+          !confirm(
+            "Delete this service? Existing bookings referencing it will block deletion.",
+          )
+        )
+          return;
+        try {
+          const res = await fetch(`${API_BASE}/services/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || "Failed to delete service.");
+            return;
+          }
+          loadServices();
+        } catch (e) {
+          alert("Failed to delete service.");
         }
       }
 
