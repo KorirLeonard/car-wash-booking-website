@@ -23,14 +23,14 @@ exports.getAllServicesAdmin = async (req, res) => {
 };
 
 exports.createService = async (req, res) => {
-  const { name, description, price } = req.body;
+  const { name, description, price, duration_mins } = req.body;
   if (!name || !price) {
     return res.status(400).json({ error: "Name and price are required." });
   }
   try {
     const [result] = await db.query(
-      "INSERT INTO services (name, description, price, is_active) VALUES (?, ?, ?, 1)",
-      [name, description || "", price],
+      "INSERT INTO services (name, description, price, duration_mins, is_active) VALUES (?, ?, ?, ?, 1)",
+      [name, description || "", price, duration_mins || 30],
     );
     res.status(201).json({ message: "Service created.", id: result.insertId });
   } catch (err) {
@@ -41,11 +41,11 @@ exports.createService = async (req, res) => {
 
 exports.updateService = async (req, res) => {
   const { id } = req.params;
-  const { name, description, price, is_active } = req.body;
+  const { name, description, price, duration_mins, is_active } = req.body;
   try {
     await db.query(
-      "UPDATE services SET name = ?, description = ?, price = ?, is_active = ? WHERE id = ?",
-      [name, description, price, is_active ? 1 : 0, id],
+      "UPDATE services SET name = ?, description = ?, price = ?, duration_mins = ?, is_active = ? WHERE id = ?",
+      [name, description, price, duration_mins || 30, is_active ? 1 : 0, id],
     );
     res.json({ message: "Service updated." });
   } catch (err) {
