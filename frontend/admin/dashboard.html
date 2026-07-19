@@ -117,7 +117,7 @@
       async function loadDashboardData() {
         try {
           const res = await fetch(
-            "http://localhost:5000/api/bookings/admin/all",
+            "https://car-wash-booking-website.onrender.com/api/bookings/admin/all",
             {
               headers: { Authorization: `Bearer ${token}` },
             },
