@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { sendApprovalEmail } = require("../utils/mailer");
 
 exports.createBooking = async (req, res) => {
   const {
@@ -107,11 +108,35 @@ exports.updateBookingStatus = async (req, res) => {
       status,
       bookingId,
     ]);
+
+    if (status === "Confirmed") {
+      const [rows] = await db.query(
+        `SELECT c.name, c.email, s.name AS service_name, b.booking_date, b.booking_time
+         FROM bookings b
+         JOIN customers c ON b.customer_id = c.id
+         JOIN services s ON b.service_id = s.id
+         WHERE b.id = ?`,
+        [bookingId],
+      );
+      if (rows.length > 0) {
+        const b = rows[0];
+        sendApprovalEmail(
+          b.email,
+          b.name,
+          b.service_name,
+          b.booking_date,
+          b.booking_time,
+        ).catch((err) => console.error("Email send failed:", err));
+      }
+    }
+
     res.json({ message: "Operational entity state successfully updated." });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Failed to update workflow state." });
   }
 };
+
 exports.deleteBooking = async (req, res) => {
   const { id } = req.params;
   try {
