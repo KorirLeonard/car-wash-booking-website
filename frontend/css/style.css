@@ -496,3 +496,124 @@ footer {
 .btn-signin:hover {
   background-color: #1d4ed8; /* Darker blue on hover */
 }
+
+.site-footer {
+  background: #05070d;
+  color: #a0a8bc;
+  padding: 60px 24px 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+  gap: 40px;
+  padding-bottom: 40px;
+}
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+}
+.footer-col h4 {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.footer-brand .logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.footer-brand .logo span {
+  color: #a0a8bc;
+  font-weight: 500;
+}
+.footer-brand p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 0 0 20px;
+  max-width: 320px;
+}
+.footer-social {
+  display: flex;
+  gap: 12px;
+}
+.footer-social a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0a8bc;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.footer-social a:hover {
+  background: #4f7cff;
+  border-color: #4f7cff;
+  color: #fff;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+.footer-col ul li a {
+  color: #a0a8bc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+.footer-col ul li a:hover {
+  color: #4f7cff;
+}
+.footer-contact li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.footer-contact li i {
+  color: #4f7cff;
+  margin-top: 3px;
+  width: 14px;
+}
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+.footer-bottom p {
+  margin: 0;
+}
+.footer-credit {
+  color: #6b7280;
+}
