@@ -27,5 +27,6 @@ exports.login = async (req, res) => {
     res
       .status(500)
       .json({ error: "Internal system fault during login transaction." });
+    console.error(error);
   }
 };
