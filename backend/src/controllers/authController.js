@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
     );
     res.json({ token, message: "Authentication verification success." });
   } catch (err) {
-    console.err(err);
+    console.error(err);
     res
       .status(500)
 
