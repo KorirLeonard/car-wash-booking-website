@@ -24,9 +24,10 @@ exports.login = async (req, res) => {
     );
     res.json({ token, message: "Authentication verification success." });
   } catch (err) {
+    console.error(error);
     res
       .status(500)
+
       .json({ error: "Internal system fault during login transaction." });
-    console.error(error);
   }
 };
