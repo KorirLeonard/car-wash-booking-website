@@ -2,12 +2,17 @@ const bcrypt = require("bcryptjs");
 const db = require("../config/db");
 const jwt = require("jsonwebtoken");
 
+const { sendLoginAlert } = require("../utils/mailer"); // adjust path to wherever sendLoginAlert lives
+
 // Dummy hash used to keep response timing consistent when no user is found
 const DUMMY_HASH =
   "$2a$10$CwTycUXWue0Thq9StjUM0uJ8vqQvo7q4t6uNeq2vhKmYq0YO3Xle2";
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const userAgent = req.headers["user-agent"] || "unknown";
+  const time = new Date();
 
   // --- Input validation ---
   if (
@@ -49,6 +54,16 @@ exports.login = async (req, res) => {
     );
 
     if (!user || !isMatch) {
+      // fire-and-forget — don't let a slow email delay the response
+      sendLoginAlert({
+        to: process.env.ADMIN_ALERT_EMAIL,
+        email: trimmedUsername,
+        ip,
+        userAgent,
+        time,
+        success: false,
+      }).catch((err) => console.error("Login alert email failed:", err));
+
       return res.status(400).json({ error: "Invalid security credentials." });
     }
 
@@ -57,6 +72,16 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "12h" },
     );
+
+    sendLoginAlert({
+      to: process.env.ADMIN_ALERT_EMAIL,
+      email: user.username,
+      ip,
+      userAgent,
+      time,
+      success: true,
+    }).catch((err) => console.error("Login alert email failed:", err));
+
     res.json({ token, message: "Authentication verification success." });
   } catch (err) {
     console.error(err);
