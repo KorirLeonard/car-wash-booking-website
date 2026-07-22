@@ -19,6 +19,10 @@ const { setWss } = require("./utils/notifier");
 
 const app = express();
 
+// Trust the first hop of the reverse proxy (Render) so req.ip / X-Forwarded-For
+// are read correctly by express-rate-limit and our own IP logging.
+app.set("trust proxy", 1);
+
 // Global Cross-Origin Resource Sharing and JSON Body Parsing Engine
 app.use(cors());
 app.use(express.json());
