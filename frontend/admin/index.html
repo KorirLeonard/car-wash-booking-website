@@ -23,11 +23,10 @@
       </h2>
       <form id="admin-login-form" class="modern-form" style="padding: 30px">
         <div class="form-group" style="margin-bottom: 16px">
-          <label>Username</label><input type="text" id="username" required />
+          <label>Username</label><input type="text" id="username" />
         </div>
         <div class="form-group" style="margin-bottom: 24px">
-          <label>Password</label
-          ><input type="password" id="password" required />
+          <label>Password</label><input type="password" id="password" />
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%">
           Authenticate
@@ -46,16 +45,43 @@
           e.preventDefault();
           const errEl = document.getElementById("login-err");
           errEl.innerText = "";
+
+          const usernameEl = document.getElementById("username");
+          const passwordEl = document.getElementById("password");
+          const username = usernameEl.value.trim();
+          const password = passwordEl.value;
+
+          // --- Validation ---
+          if (!username || !password) {
+            errEl.innerText = "Username and password are required.";
+            return;
+          }
+
+          if (username.length < 3 || username.length > 32) {
+            errEl.innerText = "Username must be between 3 and 32 characters.";
+            return;
+          }
+
+          // Allow only letters, numbers, dots, underscores, hyphens
+          const usernamePattern = /^[a-zA-Z0-9._-]+$/;
+          if (!usernamePattern.test(username)) {
+            errEl.innerText = "Username contains invalid characters.";
+            return;
+          }
+
+          if (password.length < 8) {
+            errEl.innerText = "Password must be at least 8 characters.";
+            return;
+          }
+
+          // --- Submit ---
           try {
             const res = await fetch(
               "https://car-wash-booking-website.onrender.com/api/auth/login",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  username: document.getElementById("username").value,
-                  password: document.getElementById("password").value,
-                }),
+                body: JSON.stringify({ username, password }),
               },
             );
             const data = await res.json();
@@ -63,9 +89,9 @@
               localStorage.setItem("adminToken", data.token);
               window.location.href = "dashboard.html";
             } else {
-              errEl.innerText = data.error;
+              errEl.innerText = data.error || "Login failed.";
             }
-          } catch (e) {
+          } catch (err) {
             errEl.innerText = "Server processing fault.";
           }
         });
