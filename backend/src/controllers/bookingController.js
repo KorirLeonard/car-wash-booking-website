@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const { sendApprovalEmail } = require("../utils/mailer");
+const { notifyNewBooking, notifyFailedLogins } = require("../utils/notifier");
 
 exports.createBooking = async (req, res) => {
   const {
@@ -67,6 +68,20 @@ exports.createBooking = async (req, res) => {
       "INSERT INTO bookings (customer_id, vehicle_id, service_id, booking_date, booking_time) VALUES (?, ?, ?, ?, ?)",
       [customerId, vehicleId, service_id, booking_date, booking_time],
     );
+
+    // Fetch service name for the notification (kept lightweight, not required for booking itself)
+    const [serviceRows] = await db.query(
+      "SELECT name FROM services WHERE id = ?",
+      [service_id],
+    );
+    const serviceName = serviceRows[0]?.name || "a service";
+
+    notifyNewBooking({
+      name,
+      serviceName,
+      date: booking_date,
+      time: booking_time,
+    }).catch((err) => console.error("New booking notification failed:", err));
 
     res.status(201).json({
       message: "Booking verified and structured.",
