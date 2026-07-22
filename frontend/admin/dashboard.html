@@ -1092,12 +1092,72 @@
       let notificationHistory = [];
       const originalTitle = document.title;
 
+      function connectNotificationsSocket() {
+        const wsUrl = API_BASE.replace(/^http/, "ws") + "/notifications";
+        const socket = new WebSocket(wsUrl);
+
+        socket.onmessage = (event) => {
+          let data;
+          try {
+            data = JSON.parse(event.data);
+          } catch {
+            return;
+          }
+
+          if (data.type === "new_booking") {
+            checkForNewBookings();
+          }
+
+          if (data.type === "failed_login") {
+            addNotification("⚠️ Failed Login Attempt", data.message);
+            unseenCount += 1;
+            updateBellBadge();
+            flashTabTitle();
+            showToast("Failed Login Attempt", data.message, "error");
+            fireGenericBrowserNotification(
+              "⚠️ Failed Login Attempt",
+              data.message,
+            );
+          }
+
+          if (data.type === "successful_login") {
+            addNotification("✅ Admin Login", data.message);
+            unseenCount += 1;
+            updateBellBadge();
+            flashTabTitle();
+            showToast("Admin Login", data.message, "info");
+            fireGenericBrowserNotification("✅ Admin Login", data.message);
+          }
+        };
+
+        socket.onclose = () => {
+          setTimeout(connectNotificationsSocket, 5000);
+        };
+
+        socket.onerror = () => socket.close();
+      }
+
+      function fireGenericBrowserNotification(title, body) {
+        if (
+          !("Notification" in window) ||
+          Notification.permission !== "granted"
+        )
+          return;
+        const notif = new Notification(title, { body });
+        notif.onclick = () => {
+          window.focus();
+          clearNotifications();
+        };
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
         loadDashboardData();
+        connectNotificationsSocket();
         if ("Notification" in window && Notification.permission === "default") {
           Notification.requestPermission();
         }
-        setInterval(checkForNewBookings, 30000);
+        // Fallback poll in case the socket disconnects — WebSocket is now primary
+        setInterval(checkForNewBookings, 60000);
       });
 
       document.addEventListener("click", (e) => {
